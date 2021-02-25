@@ -53,11 +53,10 @@ INSERT INTO employee (first_name,last_name,role_id,manager_id) values
 ("Kurt","Wagner", 4, 6),
 ("Piotr","Rasputin", 5, null),
 ("Betsy","Braddock", 6, null),
-("Kitty","Pride", 7, 9, null),
+("Kitty","Pride", 7, 9),
 ("Erik","Eisenhardt", 8, null),
 ("Remy","LeBeau", 10, 11),
 ("Ororo","Munroe", 9, null),
 ("Wanda","Maximoff", 1, 4)
-
 
 
