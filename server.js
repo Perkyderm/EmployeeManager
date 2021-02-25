@@ -46,7 +46,7 @@ start = () => {
       switch (input.action) {
         case "View all employees":
           byEmployees();
-
+          start();
           break;
 
         case "View all employees by department":
@@ -102,9 +102,20 @@ byEmployees = () => {
 
 byDepartment = () => {
   connection.query(
-    "SELECT employee.id, employee.first_name, employee.last_name, department.name, employee.manager_id AS department, role.title FROM employee LEFT JOIN role on role.id = employee.role_id LEFT JOIN department ON department.id = role.department_id WHERE manager_id;",
+    "SELECT employee.id, employee.first_name, employee.last_name, department.name FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department department on role.department_id = department.id WHERE department.id;",
     (err, res) => {
       if (err) throw err;
+      console.table(res);
+    }
+  );
+};
+
+byManager = () => {
+  connection.query(
+    //todo FIX THIS ONE
+    "SELECT employee.id, employee.first_name, employee.last_name, department.name, employee.manager_id AS department, role.title FROM employee LEFT JOIN role on role.id = employee.role_id LEFT JOIN department ON department.id = role.manager_id",
+    (err, res) => {
+      if (err) throw error;
       console.table(res);
     }
   );
