@@ -1,9 +1,7 @@
-const express = require("express");
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const logo = require("asciiart-logo");
 const config = require("./package.json");
-const cTable = require("console.table");
 
 // creates console visual
 console.log(logo(config).render());
@@ -32,13 +30,13 @@ start = () => {
       choices: [
         "View all employees",
         "View all employees by department",
-        "View all employees by manager",
+        //"View all employees by manager",
         "Add employee",
         "Add Department",
         "Add Role",
         "Remove employee",
         "Update employee role",
-        "Update employee manager",
+        //"Update employee manager",
         "Exit",
       ],
     })
@@ -54,10 +52,10 @@ start = () => {
           start();
           break;
 
-        case "View all employees by manager":
-          byManager();
-          start();
-          break;
+        // case "View all employees by manager":
+        //   byManager();
+        //   start();
+        //   break;
 
         case "Add employee":
           addEmployee();
@@ -79,9 +77,9 @@ start = () => {
           updateEmpRole();
           break;
 
-        case "Update employee manager":
-          updateEmpMan();
-          break;
+        // case "Update employee manager":
+        //   updateEmpMan();
+        //   break;
 
         default:
           connection.end();
@@ -110,17 +108,19 @@ byDepartment = () => {
   );
 };
 
-byManager = () => {
-  connection.query(
-    //todo FIX THIS ONE
-    "SELECT employee.id, employee.first_name, employee.last_name, department.name, employee.manager_id AS department, role.title FROM employee LEFT JOIN role on role.id = employee.role_id LEFT JOIN department ON department.id = employee.manager_id;",
-    (err, res) => {
-      if (err) throw err;
-      console.table(res);
-    }
-  );
-};
+//? Extra, to fix later.
+// byManager = () => {
+//   connection.query(
+//     //todo FIX THIS ONE
+//     "SELECT employee.id, employee.first_name, employee.last_name, department.name, employee.manager_id AS department, role.title FROM employee LEFT JOIN role on role.id = employee.role_id LEFT JOIN department ON department.id = employee.manager_id;",
+//     (err, res) => {
+//       if (err) throw err;
+//       console.table(res);
+//     }
+//   );
+// };
 
+//~ Add functions
 addEmployee = () => {
   inquirer
     .prompt([
@@ -167,9 +167,84 @@ newEmployee = (employeeFirst, employeeLast, department) => {
   connection.query(
     "INSERT INTO employee SET first_name = ?, last_name = ?, role_id = ?",
     [employeeFirst, employeeLast, department],
-    function (error, res) {
-      if (error) throw error;
+    function (err, res) {
+      if (err) throw err;
       console.log(`Added ${employeeFirst} ${employeeLast}!`);
+    }
+  );
+};
+
+addDepartment = () => {
+  inquirer
+    .prompt([
+      {
+        name: "Department",
+        type: "input",
+        message: "Please enter the department you would like to add?",
+        validate: (answer) => {
+          if (answer !== "") {
+            return true;
+          }
+          return "Please enter at least one character.";
+        },
+      },
+    ])
+    .then((answers) => {
+      newDepartment(answers.Department);
+      start();
+    });
+};
+
+newDepartment = (Department) => {
+  connection.query(
+    "INSERT INTO department SET name = ?",
+    [Department],
+    function (err, res) {
+      if (err) throw err;
+      console.log(`Added ${Department}!`);
+    }
+  );
+};
+
+addRole = () => {
+  inquirer
+    .prompt([
+      {
+        name: "title",
+        type: "input",
+        message: "Please enter the role's title.",
+        validate: (answer) => {
+          if (answer !== "") {
+            return true;
+          }
+          return "Please enter at least one character.";
+        },
+      },
+      {
+        name: "salary",
+        type: "input",
+        message: "Please enter the role's salary.",
+      },
+      {
+        name: "department_id",
+        type: "input",
+        message: "Please enter the department id.",
+      },
+    ])
+    .then((answers) => {
+      // Adds role to database
+      newRole(answers.title, answers.salary, answers.department_id);
+      start();
+    });
+};
+
+newRole = (title, salary, department_id) => {
+  connection.query(
+    "INSERT INTO role SET title = ?, salary = ?, department_id = ?",
+    [title, salary, department_id],
+    function (err, res) {
+      if (err) throw err;
+      console.log(`Added ${title} ${department_id}!`);
     }
   );
 };
