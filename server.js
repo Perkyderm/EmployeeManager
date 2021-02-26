@@ -45,12 +45,11 @@ start = () => {
       switch (input.action) {
         case "View all employees":
           byEmployees();
-          start();
+
           break;
 
         case "View all employees by department":
           byDepartment();
-          start();
           break;
 
         // case "View all employees by manager":
@@ -108,6 +107,7 @@ byDepartment = () => {
       console.table(res);
     }
   );
+  start();
 };
 
 //? Extra, to fix later.
