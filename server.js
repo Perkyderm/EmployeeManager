@@ -113,10 +113,63 @@ byDepartment = () => {
 byManager = () => {
   connection.query(
     //todo FIX THIS ONE
-    "SELECT employee.id, employee.first_name, employee.last_name, department.name, employee.manager_id AS department, role.title FROM employee LEFT JOIN role on role.id = employee.role_id LEFT JOIN department ON department.id = role.manager_id",
+    "SELECT employee.id, employee.first_name, employee.last_name, department.name, employee.manager_id AS department, role.title FROM employee LEFT JOIN role on role.id = employee.role_id LEFT JOIN department ON department.id = employee.manager_id;",
     (err, res) => {
-      if (err) throw error;
+      if (err) throw err;
       console.table(res);
+    }
+  );
+};
+
+addEmployee = () => {
+  inquirer
+    .prompt([
+      {
+        name: "employeeFirst",
+        type: "input",
+        message: "What is the employee's first name?",
+        validate: (answer) => {
+          if (answer !== "") {
+            return true;
+          }
+          return "Please enter at least one character.";
+        },
+      },
+      {
+        name: "employeeLast",
+        type: "input",
+        message: "What is the employee's last name?",
+        validate: (answer) => {
+          if (answer !== "") {
+            return true;
+          }
+          return "Please enter at least one character.";
+        },
+      },
+      {
+        name: "department",
+        type: "input",
+        message: "Please enter the role id.",
+      },
+    ])
+    .then((answers) => {
+      newEmployee(
+        answers.employeeFirst,
+        answers.employeeLast,
+        answers.department,
+        answers.manager
+      );
+      start();
+    });
+};
+
+newEmployee = (employeeFirst, employeeLast, department) => {
+  connection.query(
+    "INSERT INTO employee SET first_name = ?, last_name = ?, role_id = ?",
+    [employeeFirst, employeeLast, department],
+    function (error, res) {
+      if (error) throw error;
+      console.log(`Added ${employeeFirst} ${employeeLast}!`);
     }
   );
 };
