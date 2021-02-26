@@ -26,6 +26,7 @@ start = () => {
     .prompt({
       name: "action",
       type: "list",
+      pageSize: 12,
       message: "Welcome to the shop! What would you like to do?",
       choices: [
         "View all employees",
@@ -70,11 +71,11 @@ start = () => {
           break;
 
         case "Remove employee":
-          removeEmployee();
+          deleteEmployee();
           break;
 
         case "Update employee role":
-          updateEmpRole();
+          updateEmployeeRole();
           break;
 
         // case "Update employee manager":
@@ -232,7 +233,6 @@ addRole = () => {
       },
     ])
     .then((answers) => {
-      // Adds role to database
       newRole(answers.title, answers.salary, answers.department_id);
       start();
     });
@@ -247,4 +247,64 @@ newRole = (title, salary, department_id) => {
       console.log(`Added ${title} ${department_id}!`);
     }
   );
+};
+
+updateEmployeeRole = () => {
+  inquirer
+    .prompt([
+      {
+        name: "employeeId",
+        type: "input",
+        message: "Please enter employee's id",
+      },
+      {
+        name: "roleId",
+        type: "input",
+        message: "Please enter role's id",
+      },
+    ])
+    .then((answers) => {
+      roleUpdate(answers.employeeId, answers.roleId);
+      start();
+    });
+};
+
+roleUpdate = (employeeId, roleId) => {
+  connection.query(
+    "UPDATE employee SET role_id = ? WHERE id = ?",
+
+    [roleId, employeeId],
+    function (error, res) {
+      if (error) throw error;
+      console.log(`Updated ${employeeId} to ${roleId}`);
+    }
+  );
+  byDepartment();
+};
+
+deleteEmployee = () => {
+  inquirer
+    .prompt([
+      {
+        name: "id",
+        type: "input",
+        message: "Please enter the Employee id",
+      },
+    ])
+    .then((answers) => {
+      rmEmp(answers.id);
+      start();
+    });
+};
+
+rmEmp = (id) => {
+  connection.query(
+    "DELETE FROM employee WHERE id = ?",
+    [id],
+    function (error, id) {
+      if (error) throw error;
+    }
+  );
+
+  byEmployees();
 };
