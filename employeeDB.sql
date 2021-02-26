@@ -34,16 +34,16 @@ INSERT INTO department (name) values
 ("Production");
 
 INSERT INTO role (title, salary, department_id) values 
-('Barista', 35.000, 1), 
-('Store Manager', 35.000, 1), 
-('Accountant', 60.000, 2), 
-('Delivery Driver', 30.000, 3), 
-('Delivery Manager', 40.000, 3), 
-('Social Media Manager', 30.000, 4), 
-('Production Roaster', 40.000, 5), 
-('Head Roaster', 60.000, 5), 
-( 'Production Manager', 35.000, 5),
-( 'Production Assistant', 25.000, 5);
+('Barista', 35000, 1), 
+('Store Manager', 3500, 1), 
+('Accountant', 60000, 2), 
+('Delivery Driver', 30000, 3), 
+('Delivery Manager', 40000, 3), 
+('Social Media Manager', 30000, 4), 
+('Production Roaster', 40000, 5), 
+('Head Roaster', 60000, 5), 
+( 'Production Manager', 35000, 5),
+( 'Production Assistant', 25000, 5);
 
 INSERT INTO employee (first_name,last_name,role_id,manager_id) values 
 ("Bobby","Drake", 1, 4),
@@ -57,6 +57,5 @@ INSERT INTO employee (first_name,last_name,role_id,manager_id) values
 ("Erik","Eisenhardt", 8, null),
 ("Remy","LeBeau", 10, 11),
 ("Ororo","Munroe", 9, null),
-("Wanda","Maximoff", 1, 4)
-
+("Wanda","Maximoff", 1, 4);
 

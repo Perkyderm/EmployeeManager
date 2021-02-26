@@ -12,7 +12,7 @@ const connection = mysql.createConnection({
   user: "root",
 
   //! change this before pushing
-  password: "loX0D0nT@",
+  password: "",
   database: "employees_DB",
 });
 
@@ -26,7 +26,7 @@ start = () => {
     .prompt({
       name: "action",
       type: "list",
-      pageSize: 12,
+      pageSize: 36,
       message: "Welcome to the shop! What would you like to do?",
       choices: [
         "View all employees",
@@ -81,9 +81,9 @@ start = () => {
         // case "Update employee manager":
         //   updateEmpMan();
         //   break;
-
-        default:
+        case "Exit":
           connection.end();
+          break;
       }
     });
 };
@@ -97,6 +97,7 @@ byEmployees = () => {
       console.table(res);
     }
   );
+  start();
 };
 
 byDepartment = () => {
@@ -301,7 +302,7 @@ rmEmp = (id) => {
   connection.query(
     "DELETE FROM employee WHERE id = ?",
     [id],
-    function (error, id) {
+    function (error, res) {
       if (error) throw error;
     }
   );
